@@ -1,11 +1,12 @@
 package edu.tcu.cs.frogcrewonline.crewmember;
 
+import edu.tcu.cs.frogcrewonline.crewmember.converter.MemberDtoToMemberConverter;
+import edu.tcu.cs.frogcrewonline.crewmember.converter.MemberToMemberDtoConverter;
+import edu.tcu.cs.frogcrewonline.crewmember.dto.MemberDto;
 import edu.tcu.cs.frogcrewonline.system.Result;
 import edu.tcu.cs.frogcrewonline.system.StatusCode;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -14,12 +15,20 @@ public class CrewMemberController {
 
     private final CrewMemberService crewMemberService;
 
+    private final MemberToMemberDtoConverter memberToMemberDtoConverter;
 
-    public CrewMemberController(CrewMemberService crewMemberService) {
+    public CrewMemberController(CrewMemberService crewMemberService, MemberToMemberDtoConverter memberToMemberDtoConverter) {
         this.crewMemberService = crewMemberService;
+        this.memberToMemberDtoConverter = memberToMemberDtoConverter;
     }
 
     //Test Case 1: add member
+    @PostMapping
+    public Result addCrewMember(@Valid @RequestBody CrewMember newCrewMember) {
+        CrewMember savedMember = this.crewMemberService.save(newCrewMember);
+        MemberDto savedMemberDto = this.memberToMemberDtoConverter.convert(savedMember);
+        return new Result(true, StatusCode.SUCCESS, "Add Success", savedMemberDto);
+    }
 
 
 

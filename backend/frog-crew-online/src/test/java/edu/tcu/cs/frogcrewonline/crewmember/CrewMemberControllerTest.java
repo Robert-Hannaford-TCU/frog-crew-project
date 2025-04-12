@@ -1,11 +1,13 @@
 package edu.tcu.cs.frogcrewonline.crewmember;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.tcu.cs.frogcrewonline.system.StatusCode;
-
+import static org.hamcrest.Matchers.contains;
 import edu.tcu.cs.frogcrewonline.system.exception.ObjectNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,6 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 
@@ -32,6 +35,9 @@ class CrewMemberControllerTest {
 
     @Autowired
     MockMvc mockMvc;
+
+    @Autowired
+    ObjectMapper objectMapper;
 
     @MockitoBean
     CrewMemberService crewMemberService;
@@ -91,6 +97,65 @@ class CrewMemberControllerTest {
     @AfterEach
     void tearDown() {
     }
+
+
+    // Test Case 1
+    @Test
+    void testAddUserSuccess() throws Exception {
+        CrewMember member = new CrewMember();
+        member.setUserId(5);
+        member.setFirstName("Mitchel");
+        member.setLastName("Heath");
+        member.setEmail("m.h@example.com");
+        member.setPhoneNumber("1110002222");
+        member.setPassword("password123");
+        member.setRole("USER");
+        member.setQualifiedPosition(Arrays.asList("CAMERAS", "PRODUCER"));
+
+        String json = this.objectMapper.writeValueAsString(member);
+
+
+        // Given. Arrange inputs and targets. Define the behavior of Mock object CrewMemberService.
+        given(this.crewMemberService.save(Mockito.any(CrewMember.class))).willReturn(member);
+
+        // When and then
+        this.mockMvc.perform(post("/crewMember").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Add Success"))
+                .andExpect(jsonPath("$.data.userId").isNotEmpty())
+                .andExpect(jsonPath("$.data.firstName").value("Mitchel"))
+                .andExpect(jsonPath("$.data.lastName").value("Heath"))
+                .andExpect(jsonPath("$.data.email").value("m.h@example.com"))
+                .andExpect(jsonPath("$.data.phoneNumber").value("1110002222"))
+                .andExpect(jsonPath("$.data.role").value("USER"))
+                .andExpect(jsonPath("$.data.qualifiedPosition", contains("CAMERAS", "PRODUCER")));
+    }
+
+    @Test
+    void testAddMemberMissingRequiredFields() throws Exception {
+        // Given: an empty CrewMember (missing all required fields)
+        CrewMember invalidMember = new CrewMember();
+
+        String json = objectMapper.writeValueAsString(invalidMember);
+
+        // When & Then: perform the request and expect 400 with validation errors
+        mockMvc.perform(post("/crewMember")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(400))
+                .andExpect(jsonPath("$.message").value("Provided arguments are invalid, see data for details."))
+                .andExpect(jsonPath("$.data.firstName").value("First Name is required."))
+                .andExpect(jsonPath("$.data.lastName").value("Last Name is required."))
+                .andExpect(jsonPath("$.data.email").value("Email is required."))
+                .andExpect(jsonPath("$.data.phoneNumber").value("Phone Number is required."))
+                .andExpect(jsonPath("$.data.role").value("Role is required."))
+                .andExpect(jsonPath("$.data.qualifiedPosition").value("Qualified Position is required."));
+    }
+
+
 
 
     // Test Case 3
