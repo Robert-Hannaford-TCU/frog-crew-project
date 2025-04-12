@@ -40,6 +40,37 @@ class CrewMemberServiceTest {
     }
 
     @Test
+    void testSaveSuccess() {
+        // Given
+        CrewMember newMember = new CrewMember();
+        newMember.setUserId(1);
+        newMember.setFirstName("John");
+        newMember.setLastName("Doe");
+        newMember.setEmail("john.doe@example.com");
+        newMember.setPhoneNumber("1234567890");
+        newMember.setPassword("password123");
+        newMember.setRole("USER");
+        newMember.setQualifiedPosition(Arrays.asList("CAMERAS", "PRODUCER"));
+
+        given(this.crewMemberRepository.save(newMember)).willReturn(newMember);
+
+        // When
+        CrewMember savedMember = this.crewMemberService.save(newMember);
+
+        // Then
+        assertThat(savedMember.getUserId()).isEqualTo(1);
+        assertThat(savedMember.getFirstName()).isEqualTo("John");
+        assertThat(savedMember.getLastName()).isEqualTo("Doe");
+        assertThat(savedMember.getEmail()).isEqualTo("john.doe@example.com");
+        assertThat(savedMember.getPhoneNumber()).isEqualTo("1234567890");
+        assertThat(savedMember.getPassword()).isEqualTo("password123");
+        assertThat(savedMember.getRole()).isEqualTo("USER");
+        assertThat(savedMember.getQualifiedPosition()).containsExactly("CAMERAS", "PRODUCER");
+
+        verify(this.crewMemberRepository, times(1)).save(newMember);
+    }
+
+    @Test
     void testFindCrewMemberByIdSuccess() {
         // Given. Arrange inputs and targets. Define behavior of Mock object
         /*

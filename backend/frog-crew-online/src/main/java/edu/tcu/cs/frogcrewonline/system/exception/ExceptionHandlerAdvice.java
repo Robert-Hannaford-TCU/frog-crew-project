@@ -14,6 +14,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +46,19 @@ public class ExceptionHandlerAdvice {
             map.put(key, val);
         });
         return new Result(false, StatusCode.INVALID_ARGUMENT, "Provided arguments are invalid, see data for details.", map);
+    }
+
+
+ // email exception
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    Result handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        String message = "A data integrity violation occurred.";
+        if (ex.getMessage() != null && ex.getMessage().contains("EMAIL")) {
+            message = "A crew member with this email already exists.";
+        }
+        return new Result(false, StatusCode.FORBIDDEN, message);
     }
 
 //    @ExceptionHandler({UsernameNotFoundException.class, BadCredentialsException.class})
