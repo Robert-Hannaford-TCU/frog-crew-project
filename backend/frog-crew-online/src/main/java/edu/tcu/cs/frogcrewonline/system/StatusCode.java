@@ -14,4 +14,5 @@ public class StatusCode {
 
     public static final int INTERNAL_SERVER_ERROR = 500; // Server internal error
 
+    public static final Integer NO_CONTENT = 204;
 }
