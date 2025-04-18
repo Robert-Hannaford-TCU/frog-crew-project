@@ -82,7 +82,7 @@ class CrewAssignmentServiceTest {
         assertEquals("Texas Longhorns", result.opponent());
         assertEquals("Jane Smith", result.crewedMembers().get(0).fullName());
 
-        verify(converter).convert(assignment); // <-- moved to AFTER the call
+        verify(converter).convert(assignment);
     }
 
     @Test

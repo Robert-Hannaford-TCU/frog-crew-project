@@ -15,6 +15,8 @@ public class Game implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer gameId;
 
+    private Integer scheduleId;
+
     @NotEmpty(message = "Type of sport is required.")
     private String sportType;
 
@@ -45,6 +47,14 @@ public class Game implements Serializable {
 
     public void setGameId(Integer gameId) {
         this.gameId = gameId;
+    }
+
+    public Integer getScheduleId() {
+        return scheduleId;
+    }
+
+    public void setScheduleId(Integer scheduleId) {
+        this.scheduleId = scheduleId;
     }
 
     public String getSportType() {
