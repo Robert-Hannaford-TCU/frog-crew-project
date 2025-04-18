@@ -24,9 +24,9 @@ public class CrewAssignmentController {
     public Result getCrewListForGame(@PathVariable Integer gameId) {
         CrewListDto crewList = crewAssignmentService.getCrewListForGame(gameId);
 
-        if (crewList.crewedMembers().isEmpty()) {
-            return new Result(true, StatusCode.NO_CONTENT, "No crew assigned to this game.");
-        }
+//        if (crewList.crewedMembers().isEmpty()) {
+//            return new Result(true, StatusCode.NO_CONTENT, "No crew assigned to this game.");
+//        }
 
         return new Result(true, StatusCode.SUCCESS, "Find Success", crewList);
     }

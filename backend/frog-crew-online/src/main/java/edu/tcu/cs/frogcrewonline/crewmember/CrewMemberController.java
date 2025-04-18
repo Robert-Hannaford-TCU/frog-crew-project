@@ -37,7 +37,8 @@ public class CrewMemberController {
     @GetMapping("/{userId}")
     public Result findCrewMemberById(@PathVariable Integer userId) {
         CrewMember  foundCrewMember = this.crewMemberService.findById(userId);
-        return new Result(true, StatusCode.SUCCESS, "Find Success", foundCrewMember);
+        MemberDto dto = this.memberToMemberDtoConverter.convert(foundCrewMember);
+        return new Result(true, StatusCode.SUCCESS, "Find Success", dto);
     }
 
 
