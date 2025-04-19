@@ -73,18 +73,6 @@ class CrewMemberServiceTest {
     @Test
     void testFindCrewMemberByIdSuccess() {
         // Given. Arrange inputs and targets. Define behavior of Mock object
-        /*
-        "userId": 1,
-    "firstName": "John",
-    "lastName": "Doe",
-    "email": "john.doe@example.com",
-    "phoneNumber": "1234567890",
-    "role": "ADMIN",
-    "positions": [
-      "DIRECTOR",
-      "PRODUCER"
-    ]
-         */
         CrewMember cm = new CrewMember();
         cm.setUserId(1);
         cm.setFirstName("John");

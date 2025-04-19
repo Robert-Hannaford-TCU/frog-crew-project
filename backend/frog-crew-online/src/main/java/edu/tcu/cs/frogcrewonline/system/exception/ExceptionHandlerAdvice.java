@@ -48,6 +48,11 @@ public class ExceptionHandlerAdvice {
         return new Result(false, StatusCode.INVALID_ARGUMENT, "Provided arguments are invalid, see data for details.", map);
     }
 
+    @ExceptionHandler(ConflictException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    Result handleConflictException(ConflictException ex) {
+        return new Result(false, StatusCode.CONFLICT, ex.getMessage());
+    }
 
  // email exception
 
