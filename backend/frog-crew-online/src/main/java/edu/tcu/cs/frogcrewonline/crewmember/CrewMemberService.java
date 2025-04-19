@@ -5,6 +5,8 @@ import edu.tcu.cs.frogcrewonline.system.exception.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Transactional
 public class CrewMemberService {
@@ -19,10 +21,14 @@ public class CrewMemberService {
         return this.crewMemberRepository.save(newCrewMember);
     }
 
-    // Test Case 3
+    // Use Case 3
     public CrewMember findById(Integer crewMemberId){
         return this.crewMemberRepository.findById(crewMemberId)
                 .orElseThrow(() -> new ObjectNotFoundException("user", crewMemberId));
     }
 
+    // Use Case 16
+    public List<CrewMember> findAll() {
+        return this.crewMemberRepository.findAll(); // might have to filter all active users. Clarify
+    }
 }

@@ -1,6 +1,8 @@
 package edu.tcu.cs.frogcrewonline.crewmember;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.tcu.cs.frogcrewonline.crewmember.converter.MemberToMemberSimpleDtoConverter;
+import edu.tcu.cs.frogcrewonline.crewmember.dto.MemberSimpleDto;
 import edu.tcu.cs.frogcrewonline.system.StatusCode;
 import static org.hamcrest.Matchers.contains;
 import edu.tcu.cs.frogcrewonline.system.exception.ObjectNotFoundException;
@@ -41,6 +43,9 @@ class CrewMemberControllerTest {
 
     @MockitoBean
     CrewMemberService crewMemberService;
+
+    @MockitoBean
+    MemberToMemberSimpleDtoConverter memberToMemberSimpleDtoConverter;
 
     List<CrewMember> members;
 
@@ -191,6 +196,37 @@ class CrewMemberControllerTest {
                 .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
                 .andExpect(jsonPath("$.message").value("Could not find user with id 2"))
                 .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    // Use case 16 tests:
+    @Test
+    void testFindAllCrewMembersSuccess() throws Exception {
+        CrewMember m = this.members.get(0); // John Doe
+        MemberSimpleDto dto = new MemberSimpleDto(m.getUserId(), m.getFirstName() + " " + m.getLastName(), m.getEmail(), m.getPhoneNumber());
+
+        // Given
+        given(this.crewMemberService.findAll()).willReturn(List.of(m));
+        given(this.memberToMemberSimpleDtoConverter.convert(m)).willReturn(dto);
+
+        // When and then
+        this.mockMvc.perform(get("/crewMember").accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Find Success"))
+                .andExpect(jsonPath("$.data[0].userId").value(m.getUserId()))
+                .andExpect(jsonPath("$.data[0].fullName").value("John Doe"))
+                .andExpect(jsonPath("$.data[0].email").value(m.getEmail()))
+                .andExpect(jsonPath("$.data[0].phoneNumber").value(m.getPhoneNumber()));
+    }
+
+    @Test
+    void testFindAllCrewMembersReturnsEmptyList() throws Exception {
+        given(this.crewMemberService.findAll()).willReturn(List.of());
+
+        this.mockMvc.perform(get("/crewMember").accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.NO_CONTENT))
+                .andExpect(jsonPath("$.message").value("No Crew Members registered in the system."));
     }
 
 }

@@ -117,4 +117,59 @@ class CrewMemberServiceTest {
 
     }
 
+
+    //Use case 16 tests:
+    @Test
+    void testFindAllShouldReturnCrewMembers() {
+        // Given
+        CrewMember member1 = new CrewMember();
+        member1.setUserId(1);
+        member1.setFirstName("John");
+        member1.setLastName("Doe");
+        member1.setEmail("john.doe@example.com");
+        member1.setPhoneNumber("1234567890");
+        member1.setPassword("secret");
+        member1.setRole("ADMIN");
+        member1.setQualifiedPosition(List.of("CAMERAS", "DIRECTOR"));
+
+        CrewMember member2 = new CrewMember();
+        member2.setUserId(2);
+        member2.setFirstName("Jane");
+        member2.setLastName("Smith");
+        member2.setEmail("jane.smith@example.com");
+        member2.setPhoneNumber("0987654321");
+        member2.setPassword("password");
+        member2.setRole("USER");
+        member2.setQualifiedPosition(List.of("PRODUCER"));
+
+        //given
+        given(this.crewMemberRepository.findAll()).willReturn(Arrays.asList(member1, member2));
+
+        // When
+        List<CrewMember> result = this.crewMemberService.findAll();
+
+        // Then
+        assertThat(result).hasSize(2);
+
+        // First Member
+        assertThat(result.get(0).getUserId()).isEqualTo(1);
+        assertThat(result.get(0).getFirstName()).isEqualTo("John");
+        assertThat(result.get(0).getLastName()).isEqualTo("Doe");
+        assertThat(result.get(0).getEmail()).isEqualTo("john.doe@example.com");
+        assertThat(result.get(0).getPhoneNumber()).isEqualTo("1234567890");
+        assertThat(result.get(0).getRole()).isEqualTo("ADMIN");
+        assertThat(result.get(0).getQualifiedPosition()).containsExactly("CAMERAS", "DIRECTOR");
+
+        // Second Member
+        assertThat(result.get(1).getUserId()).isEqualTo(2);
+        assertThat(result.get(1).getFirstName()).isEqualTo("Jane");
+        assertThat(result.get(1).getLastName()).isEqualTo("Smith");
+        assertThat(result.get(1).getEmail()).isEqualTo("jane.smith@example.com");
+        assertThat(result.get(1).getPhoneNumber()).isEqualTo("0987654321");
+        assertThat(result.get(1).getRole()).isEqualTo("USER");
+        assertThat(result.get(1).getQualifiedPosition()).containsExactly("PRODUCER");
+
+        verify(this.crewMemberRepository, times(1)).findAll();
+    }
+
 }
