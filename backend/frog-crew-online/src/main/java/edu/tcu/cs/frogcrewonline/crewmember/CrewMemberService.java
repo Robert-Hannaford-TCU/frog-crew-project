@@ -27,8 +27,18 @@ public class CrewMemberService {
                 .orElseThrow(() -> new ObjectNotFoundException("user", crewMemberId));
     }
 
+    // Use Case 15 - delete a crew member
+    public void deleteById(Integer userId) {
+        if (!crewMemberRepository.existsById(userId)) {
+            throw new ObjectNotFoundException("Crew Member", userId);
+        }
+        crewMemberRepository.deleteById(userId);
+    }
+
     // Use Case 16
     public List<CrewMember> findAll() {
         return this.crewMemberRepository.findAll(); // might have to filter all active users. Clarify
     }
+
+
 }

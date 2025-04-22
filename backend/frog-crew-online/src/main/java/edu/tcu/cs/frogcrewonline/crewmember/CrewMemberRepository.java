@@ -7,4 +7,5 @@ import java.lang.reflect.Member;
 
 @Repository
 public interface CrewMemberRepository extends JpaRepository<CrewMember, Integer> {
+    boolean existsByEmail(String email);
 }

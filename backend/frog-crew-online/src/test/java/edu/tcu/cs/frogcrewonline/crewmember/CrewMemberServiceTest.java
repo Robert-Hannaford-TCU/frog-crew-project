@@ -19,8 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CrewMemberServiceTest {
@@ -115,6 +114,39 @@ class CrewMemberServiceTest {
                 .hasMessage("Could not find user with id 1");
         verify(this.crewMemberRepository, times(1)).findById(Mockito.any(Integer.class));
 
+    }
+
+    // USe case 15 tests:
+
+    @Test
+    void testDeleteByIdSuccess() {
+        // Given
+        Integer userId = 1;
+        given(this.crewMemberRepository.existsById(userId)).willReturn(true);
+
+        // When
+        this.crewMemberService.deleteById(userId);
+
+        // Then
+        verify(this.crewMemberRepository, times(1)).existsById(userId);
+        verify(this.crewMemberRepository, times(1)).deleteById(userId);
+    }
+
+    @Test
+    void testDeleteByIdThrowsWhenNotFound() {
+        // Given
+        Integer userId = 404;
+        given(this.crewMemberRepository.existsById(userId)).willReturn(false);
+
+        // When
+        Throwable thrown = catchThrowable(() -> this.crewMemberService.deleteById(userId));
+
+        // Then
+        assertThat(thrown)
+                .isInstanceOf(ObjectNotFoundException.class)
+                .hasMessage("Could not find Crew Member with id 404");
+        verify(this.crewMemberRepository, times(1)).existsById(userId);
+        verify(this.crewMemberRepository, never()).deleteById(userId);
     }
 
 
