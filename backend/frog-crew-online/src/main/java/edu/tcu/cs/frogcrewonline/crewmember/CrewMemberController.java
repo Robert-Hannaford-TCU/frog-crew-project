@@ -7,6 +7,7 @@ import edu.tcu.cs.frogcrewonline.crewmember.dto.MemberDto;
 import edu.tcu.cs.frogcrewonline.crewmember.dto.MemberSimpleDto;
 import edu.tcu.cs.frogcrewonline.system.Result;
 import edu.tcu.cs.frogcrewonline.system.StatusCode;
+import edu.tcu.cs.frogcrewonline.system.exception.ObjectNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,6 +49,13 @@ public class CrewMemberController {
         return new Result(true, StatusCode.SUCCESS, "Find Success", dto);
     }
 
+
+    //Use Case 15: Delete crew member
+    @DeleteMapping("/{userId}")
+    public Result deleteCrewMember(@PathVariable Integer userId) {
+        this.crewMemberService.deleteById(userId);
+        return new Result(true, StatusCode.SUCCESS, "Crew Member deleted successfully.");
+    }
 
     //Use Case 16: Admin views crew members
     @GetMapping

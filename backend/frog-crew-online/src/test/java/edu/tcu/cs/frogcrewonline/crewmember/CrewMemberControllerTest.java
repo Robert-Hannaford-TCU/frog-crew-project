@@ -119,8 +119,7 @@ class CrewMemberControllerTest {
 
         String json = this.objectMapper.writeValueAsString(member);
 
-
-        // Given. Arrange inputs and targets. Define the behavior of Mock object CrewMemberService.
+        // Given
         given(this.crewMemberService.save(Mockito.any(CrewMember.class))).willReturn(member);
 
         // When and then
@@ -139,12 +138,12 @@ class CrewMemberControllerTest {
 
     @Test
     void testAddMemberMissingRequiredFields() throws Exception {
-        // Given: an empty CrewMember (missing all required fields)
+        // Given - an empty CrewMember
         CrewMember invalidMember = new CrewMember();
 
         String json = objectMapper.writeValueAsString(invalidMember);
 
-        // When & Then: perform the request and expect 400 with validation errors
+        // When and Then
         mockMvc.perform(post("/crewMember")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
@@ -197,6 +196,36 @@ class CrewMemberControllerTest {
                 .andExpect(jsonPath("$.message").value("Could not find user with id 2"))
                 .andExpect(jsonPath("$.data").isEmpty());
     }
+
+    // Use case 15 tests:
+    @Test
+    void testDeleteCrewMemberSuccess() throws Exception {
+        // Given
+        Integer userId = 1;
+        Mockito.doNothing().when(this.crewMemberService).deleteById(userId);
+
+        // When and Then
+        this.mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete("/crewMember/" + userId))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Crew Member deleted successfully."));
+    }
+
+    @Test
+    void testDeleteCrewMemberNotFound() throws Exception {
+        // Given
+        Integer userId = 101;
+        Mockito.doThrow(new ObjectNotFoundException("Crew Member", userId))
+                .when(this.crewMemberService).deleteById(userId);
+
+        // When and Then
+        this.mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete("/crewMember/" + userId))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
+                .andExpect(jsonPath("$.message").value("Could not find Crew Member with id 101"));
+    }
+
+
 
     // Use case 16 tests:
     @Test
