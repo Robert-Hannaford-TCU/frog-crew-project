@@ -1,5 +1,6 @@
 package edu.tcu.cs.frogcrewonline.crewassignment;
 
+import edu.tcu.cs.frogcrewonline.crewassignment.converter.CrewAssignmentDtoToCrewAssignmentConverter;
 import edu.tcu.cs.frogcrewonline.crewassignment.converter.CrewAssignmentToCrewAssignmentDtoConverter;
 import edu.tcu.cs.frogcrewonline.crewassignment.dto.CrewAssignmentDto;
 import edu.tcu.cs.frogcrewonline.crewassignment.dto.CrewListDto;
@@ -22,6 +23,7 @@ class CrewAssignmentServiceTest {
 
     private CrewAssignmentRespository crewAssignmentRespository;
     private CrewAssignmentToCrewAssignmentDtoConverter converter;
+    private CrewAssignmentDtoToCrewAssignmentConverter dtoToCrewAssignment;
     private GameRepository gameRepository;
     private CrewAssignmentService service;
 
@@ -29,11 +31,13 @@ class CrewAssignmentServiceTest {
     void setUp() {
         this.crewAssignmentRespository = mock(CrewAssignmentRespository.class);
         this.converter = mock(CrewAssignmentToCrewAssignmentDtoConverter.class);
+        this.dtoToCrewAssignment = mock(CrewAssignmentDtoToCrewAssignmentConverter.class);
         this.gameRepository = mock(GameRepository.class);
 
         this.service = new CrewAssignmentService(
                 crewAssignmentRespository,
                 converter,
+                dtoToCrewAssignment,
                 gameRepository
         );
     }

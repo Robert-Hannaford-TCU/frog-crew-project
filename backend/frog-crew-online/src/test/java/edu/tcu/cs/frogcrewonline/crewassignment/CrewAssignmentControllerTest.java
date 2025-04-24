@@ -21,8 +21,12 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
     @SpringBootTest
@@ -160,5 +164,74 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                     .andExpect(jsonPath("$.message").value("Could not find Game with id 5"))
                     .andExpect(jsonPath("$.data").isEmpty());
         }
+
+        // Use Case 23: Admin Schedules Crew Tests
+        @Test
+        void testAddCrewScheduleSuccess() throws Exception {
+
+            // Given
+            CrewAssignmentDto dto1 = new CrewAssignmentDto(
+                    null,
+                    1,
+                    1,
+                    "Camera",
+                    "12:00",
+                    "Control Room",
+                    "Jane Smith"
+            );
+
+            CrewAssignmentDto dto2 = new CrewAssignmentDto(
+                    null,
+                    2,
+                    1,
+                    "Audio",
+                    "12:00",
+                    "Control Room",
+                    "John Doe"
+            );
+
+            List<CrewAssignmentDto> inputList = List.of(dto1, dto2);
+
+            given(crewAssignmentService.saveCrewSchedule(eq(1), anyList())).willReturn(inputList);
+
+            // When and then
+            mockMvc.perform(post("/crewSchedule/1")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(inputList))
+                            .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.flag").value(true))
+                    .andExpect(jsonPath("$.code").value(200))
+                    .andExpect(jsonPath("$.message").value("Add Success"))
+                    .andExpect(jsonPath("$.data", hasSize(2)))
+                    .andExpect(jsonPath("$.data[0].userId").value(1))
+                    .andExpect(jsonPath("$.data[1].position").value("Audio"));
+        }
+
+        @Test
+        void testAddCrewScheduleGameNotFound() throws Exception {
+            CrewAssignmentDto dto = new CrewAssignmentDto(
+                    null,
+                    1,
+                    999,
+                    "Camera",
+                    "12:00",
+                    "Control Room",
+                    "Jane Smith"
+            );
+
+            List<CrewAssignmentDto> inputList = List.of(dto);
+
+            given(crewAssignmentService.saveCrewSchedule(eq(999), anyList()))
+                    .willThrow(new ObjectNotFoundException("Game", 999));
+
+            mockMvc.perform(post("/crewSchedule/999")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(inputList)))
+                    .andExpect(jsonPath("$.flag").value(false))
+                    .andExpect(jsonPath("$.code").value(404))
+                    .andExpect(jsonPath("$.message").value("Could not find Game with id 999"));
+        }
+
+
     }
 

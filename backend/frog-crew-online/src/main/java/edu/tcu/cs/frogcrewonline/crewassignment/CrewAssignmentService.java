@@ -1,6 +1,7 @@
 package edu.tcu.cs.frogcrewonline.crewassignment;
 
 
+import edu.tcu.cs.frogcrewonline.crewassignment.converter.CrewAssignmentDtoToCrewAssignmentConverter;
 import edu.tcu.cs.frogcrewonline.crewassignment.converter.CrewAssignmentToCrewAssignmentDtoConverter;
 import edu.tcu.cs.frogcrewonline.crewassignment.dto.CrewAssignmentDto;
 import edu.tcu.cs.frogcrewonline.crewassignment.dto.CrewListDto;
@@ -17,11 +18,13 @@ import java.util.List;
 public class CrewAssignmentService {
     private final CrewAssignmentRespository crewAssignmentRespository;
     private final CrewAssignmentToCrewAssignmentDtoConverter crewAssignmentToCrewAssignmentDtoConverter;
+    private final CrewAssignmentDtoToCrewAssignmentConverter crewAssignmentDtoToCrewAssignmentConverter;
     private final GameRepository gameRepository;
 
-    public CrewAssignmentService(CrewAssignmentRespository crewAssignmentRespository, CrewAssignmentToCrewAssignmentDtoConverter crewAssignmentToCrewAssignmentDtoConverter, GameRepository gameRepository) {
+    public CrewAssignmentService(CrewAssignmentRespository crewAssignmentRespository, CrewAssignmentToCrewAssignmentDtoConverter crewAssignmentToCrewAssignmentDtoConverter, CrewAssignmentDtoToCrewAssignmentConverter crewAssignmentDtoToCrewAssignmentConverter, GameRepository gameRepository) {
         this.crewAssignmentRespository = crewAssignmentRespository;
         this.crewAssignmentToCrewAssignmentDtoConverter = crewAssignmentToCrewAssignmentDtoConverter;
+        this.crewAssignmentDtoToCrewAssignmentConverter = crewAssignmentDtoToCrewAssignmentConverter;
         this.gameRepository = gameRepository;
     }
 
@@ -43,6 +46,21 @@ public class CrewAssignmentService {
                 game.getOpponent(),
                 crewedMembers
         );
+    }
+
+    // Use Case 23: Admin schedules crew
+    public List<CrewAssignmentDto> saveCrewSchedule(Integer gameId, List<CrewAssignmentDto> assignments) {
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new ObjectNotFoundException("Game", gameId));
+
+        return assignments.stream()
+                .map(dto -> {
+                    var assignment = crewAssignmentDtoToCrewAssignmentConverter.convert(dto);
+                    assignment.setGame(game);
+                    return crewAssignmentRespository.save(assignment);
+                })
+                .map(crewAssignmentToCrewAssignmentDtoConverter::convert)
+                .toList();
     }
 
 }
