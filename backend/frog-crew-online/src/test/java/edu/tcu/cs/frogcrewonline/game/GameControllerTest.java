@@ -1,12 +1,15 @@
 package edu.tcu.cs.frogcrewonline.game;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.tcu.cs.frogcrewonline.game.converter.GameDtoToGameConverter;
+import edu.tcu.cs.frogcrewonline.game.dto.GameDto;
 import edu.tcu.cs.frogcrewonline.system.StatusCode;
 import edu.tcu.cs.frogcrewonline.system.exception.ObjectNotFoundException;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,7 +23,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @SpringBootTest
@@ -37,6 +42,7 @@ class GameControllerTest {
     private GameService gameService;
 
     List<Game> games;
+    private GameDtoToGameConverter gameToGameDtoConverter;
 
     @BeforeEach
     void setUp() {
@@ -129,6 +135,93 @@ class GameControllerTest {
                 .andExpect(jsonPath("$.message")
                         .value("Could not find game with id 42"))
                 .andExpect(jsonPath("$.data").isEmpty());
+    }
+    
+    
+    //Use Case 20 test:
+    @Test
+    void testAddGameToScheduleSuccess() throws Exception {
+        Game game = new Game();
+        game.setGameId(3);
+        game.setScheduleId(1);
+        game.setSportType("Football");
+        game.setDate("2025-09-10");
+        game.setTime("13:00:00");
+        game.setVenue("Amon G. Carter Stadium");
+        game.setOpponent("Texas Longhorns");
+        game.setCrewPositions("Camera,Audio");
+        game.setFinalized(true);
+        game.setPublished(true);
+
+        String json = objectMapper.writeValueAsString(game);
+
+        // Given
+        given(this.gameService.addGameToSchedule(Mockito.eq(1), Mockito.any(GameDto.class)))
+                .willReturn(game);
+
+        // When and then
+        this.mockMvc.perform(post("/gameSchedule/1/games")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Add Success"))
+                .andExpect(jsonPath("$.data.gameId").value(3))
+                .andExpect(jsonPath("$.data.sportType").value("Football"))
+                .andExpect(jsonPath("$.data.venue").value("Amon G. Carter Stadium"))
+                .andExpect(jsonPath("$.data.opponent").value("Texas Longhorns"));
+    }
+
+
+    // invalid id provided
+    @Test
+    void testAddGameToScheduleWithInvalidScheduleId() throws Exception {
+        // Given
+        Game game = new Game();
+        game.setSportType("Football");
+        game.setDate("2025-09-10");
+        game.setTime("13:00:00");
+        game.setVenue("Amon G. Carter Stadium");
+        game.setOpponent("Texas Longhorns");
+        game.setCrewPositions("Camera,Audio");
+        game.setFinalized(true);
+        game.setPublished(true);
+
+        String json = objectMapper.writeValueAsString(game);
+
+        given(this.gameService.addGameToSchedule(Mockito.eq(99), Mockito.any()))
+                .willThrow(new ObjectNotFoundException("GameSchedule", 99));
+
+        this.mockMvc.perform(post("/gameSchedule/99/games")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(404))
+                .andExpect(jsonPath("$.message").value("Could not find GameSchedule with id 99"))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @Test
+    void testAddGameToScheduleAllFieldsMissing() throws Exception {
+        // Given nothing
+
+        // When and then
+        this.mockMvc.perform(post("/gameSchedule/1/games")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(400))
+                .andExpect(jsonPath("$.message").value("Provided arguments are invalid, see data for details."))
+                .andExpect(jsonPath("$.data.sportType").value("Sport type is required."))
+                .andExpect(jsonPath("$.data.date").value("Date is required."))
+                .andExpect(jsonPath("$.data.time").value("Time is required."))
+                .andExpect(jsonPath("$.data.venue").value("Venue is required."))
+                .andExpect(jsonPath("$.data.crewPositions").value("Crew positions are required."));
     }
 
 

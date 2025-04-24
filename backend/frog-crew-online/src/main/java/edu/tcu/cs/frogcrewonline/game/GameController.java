@@ -8,10 +8,8 @@ import edu.tcu.cs.frogcrewonline.game.converter.GameToGeneralGameDtoConverter;
 import edu.tcu.cs.frogcrewonline.game.dto.GeneralGameDto;
 import edu.tcu.cs.frogcrewonline.system.Result;
 import edu.tcu.cs.frogcrewonline.system.StatusCode;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -53,6 +51,15 @@ public class GameController {
         Game foundGame =this.gameService.findById(gameId);
         GeneralGameDto dto = gameToGeneralGameDtoConverter.convert(foundGame);
         return new Result(true, StatusCode.SUCCESS, "Find Success", dto);
+    }
+
+    // UC-20: Admin adds game to schedule
+    @PostMapping("/{scheduleId}/games")
+    public Result addGameToSchedule(@PathVariable Integer scheduleId,
+                                    @RequestBody @Valid GameDto gameDto) {
+        Game newGame = this.gameService.addGameToSchedule(scheduleId, gameDto);
+        GameDto savedDto = this.gameToGameDtoConverter.convert(newGame);
+        return new Result(true, StatusCode.SUCCESS, "Add Success", savedDto);
     }
 
 }
