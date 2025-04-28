@@ -1,6 +1,8 @@
 package edu.tcu.cs.frogcrewonline.crewmember;
 
+import edu.tcu.cs.frogcrewonline.crewassignment.CrewAssignmentRespository;
 import edu.tcu.cs.frogcrewonline.crewmember.utils.IdWorker;
+import edu.tcu.cs.frogcrewonline.system.exception.ConflictException;
 import edu.tcu.cs.frogcrewonline.system.exception.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -10,11 +12,13 @@ import java.util.List;
 @Service
 @Transactional
 public class CrewMemberService {
-    private CrewMemberRepository crewMemberRepository;
+    private final CrewMemberRepository crewMemberRepository;
+    private final CrewAssignmentRespository crewAssignmentRespository;
 
 
-    public CrewMemberService(CrewMemberRepository crewMemberRepository) {
+    public CrewMemberService(CrewMemberRepository crewMemberRepository, CrewAssignmentRespository crewAssignmentRespository) {
         this.crewMemberRepository = crewMemberRepository;
+        this.crewAssignmentRespository = crewAssignmentRespository;
     }
 
     public CrewMember save(CrewMember newCrewMember) {
@@ -32,6 +36,10 @@ public class CrewMemberService {
         if (!crewMemberRepository.existsById(userId)) {
             throw new ObjectNotFoundException("Crew Member", userId);
         }
+        if (crewAssignmentRespository.existsById(userId)) {
+            throw new ConflictException("Can't delete a crew member that has already been assigned to a game. Try again after game is complete.");
+        }
+
         crewMemberRepository.deleteById(userId);
     }
 
