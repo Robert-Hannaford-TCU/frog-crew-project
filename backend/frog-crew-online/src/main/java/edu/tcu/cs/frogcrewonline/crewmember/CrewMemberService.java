@@ -6,6 +6,7 @@ import edu.tcu.cs.frogcrewonline.system.exception.ConflictException;
 import edu.tcu.cs.frogcrewonline.system.exception.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
@@ -14,14 +15,17 @@ import java.util.List;
 public class CrewMemberService {
     private final CrewMemberRepository crewMemberRepository;
     private final CrewAssignmentRespository crewAssignmentRespository;
+    private final PasswordEncoder passwordEncoder;
 
 
-    public CrewMemberService(CrewMemberRepository crewMemberRepository, CrewAssignmentRespository crewAssignmentRespository) {
+    public CrewMemberService(CrewMemberRepository crewMemberRepository, CrewAssignmentRespository crewAssignmentRespository, PasswordEncoder passwordEncoder) {
         this.crewMemberRepository = crewMemberRepository;
         this.crewAssignmentRespository = crewAssignmentRespository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public CrewMember save(CrewMember newCrewMember) {
+        newCrewMember.setPassword(this.passwordEncoder.encode(newCrewMember.getPassword()));
         return this.crewMemberRepository.save(newCrewMember);
     }
 
