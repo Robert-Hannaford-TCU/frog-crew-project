@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
@@ -30,6 +31,9 @@ class CrewMemberServiceTest {
 
     @Mock
     CrewAssignmentRespository crewAssignmentRepository;
+
+    @Mock
+    PasswordEncoder passwordEncoder;
 
     @InjectMocks
     CrewMemberService crewMemberService;
@@ -55,6 +59,7 @@ class CrewMemberServiceTest {
         newMember.setRole("USER");
         newMember.setQualifiedPosition(Arrays.asList("CAMERAS", "PRODUCER"));
 
+        given(this.passwordEncoder.encode("password123")).willReturn("password123");
         given(this.crewMemberRepository.save(newMember)).willReturn(newMember);
 
         // When

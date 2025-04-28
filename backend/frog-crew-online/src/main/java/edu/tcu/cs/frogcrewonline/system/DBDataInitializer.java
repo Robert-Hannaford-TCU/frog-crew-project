@@ -11,6 +11,7 @@ import edu.tcu.cs.frogcrewonline.game.GameRepository;
 import edu.tcu.cs.frogcrewonline.gameschedule.GameSchedule;
 import edu.tcu.cs.frogcrewonline.gameschedule.GameScheduleRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -24,14 +25,16 @@ public class DBDataInitializer implements CommandLineRunner {
     private final CrewAssignmentRespository crewAssignmentRespository;
     private final AvailabilityRepository availabilityRepository;
     private final GameScheduleRepository gameScheduleRepository;
+    private final PasswordEncoder passwordEncoder;
 
 
-    public DBDataInitializer(CrewMemberRepository crewMemberRepository, GameRepository gameRepository, CrewAssignmentRespository crewAssignmentRespository, AvailabilityRepository availabilityRepository, GameScheduleRepository gameScheduleRepository) {
+    public DBDataInitializer(CrewMemberRepository crewMemberRepository, GameRepository gameRepository, CrewAssignmentRespository crewAssignmentRespository, AvailabilityRepository availabilityRepository, GameScheduleRepository gameScheduleRepository, PasswordEncoder passwordEncoder) {
         this.crewMemberRepository = crewMemberRepository;
         this.gameRepository = gameRepository;
         this.crewAssignmentRespository = crewAssignmentRespository;
         this.availabilityRepository = availabilityRepository;
         this.gameScheduleRepository = gameScheduleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -44,7 +47,7 @@ public class DBDataInitializer implements CommandLineRunner {
         m1.setLastName("Doe");
         m1.setEmail("john.doe@example.com");
         m1.setPhoneNumber("1234567890");
-        m1.setPassword("123456");
+        m1.setPassword(passwordEncoder.encode("123456"));
         m1.setRole("USER");
         m1.setQualifiedPosition(Arrays.asList("DIRECTOR", "PRODUCER"));
 
@@ -54,7 +57,7 @@ public class DBDataInitializer implements CommandLineRunner {
         m2.setLastName("Jords");
         m2.setEmail("Jords@gmail.com");
         m2.setPhoneNumber("1231234567");
-        m2.setPassword("PAsWOrD");
+        m2.setPassword(passwordEncoder.encode("password"));
         m2.setRole("USER");
         m2.setQualifiedPosition(Arrays.asList("TALENT", "PRODUCER", "UTILITY"));
 
@@ -64,7 +67,7 @@ public class DBDataInitializer implements CommandLineRunner {
         m3.setLastName("Maddison");
         m3.setEmail("RM@example.com");
         m3.setPhoneNumber("9999999999");
-        m3.setPassword("yeeess");
+        m3.setPassword(passwordEncoder.encode("yeeess"));
         m3.setRole("USER");
         m3.setQualifiedPosition(Arrays.asList("DIRECTOR"));
 
@@ -74,7 +77,7 @@ public class DBDataInitializer implements CommandLineRunner {
         m4.setLastName("Henderson");
         m4.setEmail("s.h@example.com");
         m4.setPhoneNumber("5555555555");
-        m4.setPassword("000033334444");
+        m4.setPassword(passwordEncoder.encode("000033334444"));
         m4.setRole("USER");
         m4.setQualifiedPosition(Arrays.asList("CAMERAS", "PRODUCER"));
 
@@ -83,7 +86,7 @@ public class DBDataInitializer implements CommandLineRunner {
         m5.setLastName("Admin");
         m5.setEmail("Admin@admin.com");
         m5.setPhoneNumber("0000000000");
-        m5.setPassword("ADMIN");
+        m5.setPassword(passwordEncoder.encode("ADMIN"));
         m5.setRole("ADMIN");
         m5.setQualifiedPosition(Arrays.asList("CAMERAS", "PRODUCER"));
 
