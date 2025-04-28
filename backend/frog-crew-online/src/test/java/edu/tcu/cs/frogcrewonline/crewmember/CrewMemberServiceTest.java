@@ -1,5 +1,6 @@
 package edu.tcu.cs.frogcrewonline.crewmember;
 
+import edu.tcu.cs.frogcrewonline.crewassignment.CrewAssignmentRespository;
 import edu.tcu.cs.frogcrewonline.system.exception.ObjectNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +27,9 @@ class CrewMemberServiceTest {
 
     @Mock
     CrewMemberRepository crewMemberRepository;
+
+    @Mock
+    CrewAssignmentRespository crewAssignmentRepository;
 
     @InjectMocks
     CrewMemberService crewMemberService;
@@ -123,12 +127,14 @@ class CrewMemberServiceTest {
         // Given
         Integer userId = 1;
         given(this.crewMemberRepository.existsById(userId)).willReturn(true);
+        given(this.crewAssignmentRepository.existsById(userId)).willReturn(false);
 
         // When
         this.crewMemberService.deleteById(userId);
 
         // Then
         verify(this.crewMemberRepository, times(1)).existsById(userId);
+        verify(this.crewAssignmentRepository, times(1)).existsById(userId);
         verify(this.crewMemberRepository, times(1)).deleteById(userId);
     }
 
