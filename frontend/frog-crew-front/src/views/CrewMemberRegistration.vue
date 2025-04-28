@@ -129,11 +129,16 @@ async function handleSubmit() {
     errors.value.phone = 'Phone number must be 10 digits.'
   }
   if (!form.value.password) errors.value.password = 'Password is required.'
-  if (!form.value.role) errors.value.role = 'Role is required.'
+  if (!form.value.role) {
+    errors.value.role = 'Role is required.'
+  } else if (form.value.role.toLowerCase() === 'admin') {
+    errors.value.role = 'You are not allowed to select "admin" as a role.'
+  }
   if (!form.value.qualifiedPosition) {
     errors.value.qualifiedPosition = 'Qualified Position is required.'
   }
 
+  // Stop submission if there are any errors
   if (Object.keys(errors.value).length === 0) {
     try {
       const response = await axios.post('http://localhost:8080/crewMember', form.value)
@@ -150,8 +155,8 @@ async function handleSubmit() {
     }
   }
 }
-
 </script>
+
 
 <style scoped>
 /* Optional Styling */
