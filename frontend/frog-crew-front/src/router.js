@@ -8,6 +8,9 @@ import SubmitAvailability from './views/SubmitAvailability.vue'
 import ManageCrewMembers from './views/ManageCrewMembers.vue'
 import InviteCrewMember from './views/InviteCrewMember.vue'
 import DeleteCrewMember from './views/DeleteCrewMember.vue'
+import CreateGameSchedule from './views/CreateGameSchedule.vue'
+import AdminAddsGames from './views/GameScheduleManagement.vue'
+import AdminSchedulesCrew from './views/AdminSchedulesCrew.vue'
 
 const routes = [
   { path: '/', component: CrewMemberRegistration },
@@ -18,7 +21,10 @@ const routes = [
   { path: '/submit-availability', component: SubmitAvailability },
   { path: '/manage-crew-members', component: ManageCrewMembers },
   { path: '/invite-crew-member', component: InviteCrewMember },
-  { path: '/delete-crew-member', component: DeleteCrewMember }
+  { path: '/delete-crew-member', component: DeleteCrewMember },
+  { path: '/create-game-schedule', component: CreateGameSchedule },
+  { path: '/add-games', component: AdminAddsGames, name: 'AdminAddsGames' },
+  { path: '/schedule-crew', component: AdminSchedulesCrew, name: 'AdminSchedulesCrew' }
 ]
 
 const router = createRouter({

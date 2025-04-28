@@ -30,7 +30,11 @@
       <router-link to="/delete-crew-member" class="text-blue-600 hover:underline">
         Delete Crew Member
       </router-link>
-
+      <router-link to="/create-game-schedule" class="text-blue-600 hover:underline">
+        Create Game Schedule
+      </router-link>
+      <router-link to="/add-games" class="hover:underline">Add Games</router-link>
+      <router-link to="/schedule-crew" class="hover:underline">Schedule Crew</router-link>
     </nav>
 
     <main class="p-6">

@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import router from './router.js' // Import your router config
+import router from './router.js'
 
 const app = createApp(App)
-app.use(router) // Enable Vue Router
+app.use(router) 
 app.mount('#app')
