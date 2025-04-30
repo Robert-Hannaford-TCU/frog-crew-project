@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="07482f5e-e657-4f9b-9263-b73aeebf108f" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frog-crew-online/src/test/java/edu/tcu/cs/frogcrewonline/crewassignment/CrewAssignmentControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/frog-crew-online/src/test/java/edu/tcu/cs/frogcrewonline/crewassignment/CrewAssignmentControllerTest.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="2wQBjcFyCzUM33JbeeNzoPeH6V1" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "JUnit.CrewAssignmentControllerTest.testGetCrewListNoAssignments.executor": "Run",
+    "JUnit.FrogCrewOnlineApplicationTests.executor": "Run",
+    "JUnit.frogcrewonline in frog-crew-online.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager" selected="JUnit.frogcrewonline in frog-crew-online">
+    <configuration name="CrewAssignmentControllerTest.testGetCrewListNoAssignments" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="frog-crew-online" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="edu.tcu.cs.frogcrewonline.crewassignment.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="edu.tcu.cs.frogcrewonline.crewassignment" />
+      <option name="MAIN_CLASS_NAME" value="edu.tcu.cs.frogcrewonline.crewassignment.CrewAssignmentControllerTest" />
+      <option name="METHOD_NAME" value="testGetCrewListNoAssignments" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="FrogCrewOnlineApplicationTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="frog-crew-online" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="edu.tcu.cs.frogcrewonline.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="edu.tcu.cs.frogcrewonline" />
+      <option name="MAIN_CLASS_NAME" value="edu.tcu.cs.frogcrewonline.FrogCrewOnlineApplicationTests" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="frogcrewonline in frog-crew-online" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="frog-crew-online" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/frog-crew-online/src/test/java/edu/tcu/cs/frogcrewonline" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="FrogCrewOnlineApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="frog-crew-online" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="edu.tcu.cs.frogcrewonline.FrogCrewOnlineApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.frogcrewonline in frog-crew-online" />
+        <item itemvalue="JUnit.CrewAssignmentControllerTest.testGetCrewListNoAssignments" />
+        <item itemvalue="JUnit.FrogCrewOnlineApplicationTests" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.26053.27" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.26053.27" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="07482f5e-e657-4f9b-9263-b73aeebf108f" name="Changes" comment="" />
+      <created>1745964055627</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1745964055627</updated>
+      <workItem from="1745964057903" duration="109000" />
+      <workItem from="1745985863565" duration="396000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
