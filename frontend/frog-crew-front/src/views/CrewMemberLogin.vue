@@ -49,10 +49,7 @@
         Login successful. Redirecting...
       </div>
 
-      <!-- Display Crew Member ID -->
-      <div v-if="loginSuccess && crewMemberId" class="text-blue-600 mt-4">
-        Crew Member ID: {{ crewMemberId }}
-      </div>
+      
     </form>
   </div>
 </template>
@@ -104,21 +101,30 @@ async function handleLogin() {
       },
     })
 
-    if (response.status === 200 && response.data.success) {
+    console.log('Backend response:', response.data) // Debugging response
+
+    if (response.status === 200 && response.data.flag) { // Updated flag check
       loginSuccess.value = true
 
       // Save user information in localStorage
       const userData = response.data.data
-      localStorage.setItem('userId', userData.userId)
-      localStorage.setItem('role', userData.role)
+      localStorage.setItem('userId', userData.userId) // Store userId in localStorage
+      localStorage.setItem('role', userData.role) // Optional: Store role
+
+      // Save email and password directly from the credentials object
+      localStorage.setItem('email', credentials.value.email)
+      localStorage.setItem('password', credentials.value.password)
 
       // Update reactive crewMemberId variable
       crewMemberId.value = userData.userId
 
-      // Show Crew Member ID dynamically on screen
-      console.log(`Crew Member ID: ${crewMemberId.value}`)
+      // Debugging: Log Crew Member ID and success status
+      console.log('Login Success:', loginSuccess.value)
+      console.log('Crew Member ID:', crewMemberId.value)
+      console.log('Crew Member email:', credentials.value.email)
+      console.log('Crew Member password:', credentials.value.password)
 
-      // Redirect to dashboard or profile page
+      // Redirect to Crew Member Profile Page
       setTimeout(() => {
         router.push(`/crew-member-profile/${crewMemberId.value}`)
       }, 2000)

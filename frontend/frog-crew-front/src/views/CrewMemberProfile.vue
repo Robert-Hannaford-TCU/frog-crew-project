@@ -6,12 +6,12 @@
     <div v-else-if="error" class="text-red-500">Error: {{ error }}</div>
     <div v-else>
       <div class="space-y-4">
-        <ProfileItem label="First Name" :value="profile.firstName" />
-        <ProfileItem label="Last Name" :value="profile.lastName" />
-        <ProfileItem label="Email" :value="profile.email" />
-        <ProfileItem label="Phone Number" :value="profile.phone" />
-        <ProfileItem label="Role" :value="profile.role" />
-        <ProfileItem label="Qualified Position" :value="profile.qualifiedPosition" />
+        <p class="text-gray-900"><strong>First Name:</strong> {{ profile.firstName }}</p>
+        <p class="text-gray-900"><strong>Last Name:</strong> {{ profile.lastName }}</p>
+        <p class="text-gray-900"><strong>Email:</strong> {{ profile.email }}</p>
+        <p class="text-gray-900"><strong>Phone Number:</strong> {{ profile.phoneNumber }}</p>
+        <p class="text-gray-900"><strong>Role:</strong> {{ profile.role }}</p>
+        <p class="text-gray-900"><strong>Qualified Position:</strong> {{ profile.qualifiedPosition.join(', ') }}</p>
       </div>
     </div>
   </div>
@@ -25,38 +25,52 @@ const profile = ref({});
 const loading = ref(true);
 const error = ref(null);
 
-// Function to fetch the crew member profile from the backend
+// Fetch crew member profile
 async function fetchCrewMemberProfile(id) {
   try {
-    // Send a GET request to fetch the profile by userId
-    const response = await axios.get(`http://localhost:80/crewMember/${id}`);
-    if (response.data.success) {
-      return response.data.data; // Return the profile data
+    console.log(`Fetching profile for Crew Member ID: ${id}`); // Debug ID
+
+    const response = await axios.get(`http://localhost:80/crewMember/${id}`, {
+      auth: {
+        username: localStorage.getItem('email'), // Saved email
+        password: localStorage.getItem('password'), // Saved password
+      },
+    });
+
+    console.log('Profile Fetch Response:', response); // Log backend response
+
+    // Check if the backend response indicates success
+    if (response.data.flag) { // Use flag to verify success
+      console.log('Profile Data:', response.data.data); // Log profile data
+      return response.data.data; // Return profile data
     } else {
       throw new Error(response.data.message || 'Failed to fetch profile');
     }
   } catch (err) {
-    throw new Error(err.response?.data?.message || 'Error fetching profile');
+    console.error('Error in fetchCrewMemberProfile:', err.message); // Log error details
+    throw new Error(err.message || 'Error fetching profile');
   }
 }
 
-// When the component is mounted, load the profile data
+// Load the user's profile on page mount
 onMounted(async () => {
   try {
-    // Retrieve userId from localStorage (saved during login)
-    const userId = localStorage.getItem('userId');
+    const userId = localStorage.getItem('userId'); // Retrieve user ID from localStorage
     if (!userId) {
       throw new Error('No logged-in user ID found!');
     }
 
     // Fetch the profile using the userId
+    console.log(`Fetching profile for userId: ${userId}`); // Debug userId
     profile.value = await fetchCrewMemberProfile(userId);
   } catch (err) {
-    error.value = err.message;
+    console.error('Error loading profile:', err.message); // Log error message
+    error.value = err.message || 'Failed to load profile. Please try again.';
   } finally {
     loading.value = false;
   }
 });
+
 </script>
 
 <script>

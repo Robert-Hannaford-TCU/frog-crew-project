@@ -14,7 +14,7 @@
             type="text"
             maxlength="3"
             class="px-3 py-2 border rounded-xl text-center"
-            style="width: 30px;"
+            style="width: 40px;"
             @input="autoMove(0)"
           />
           <input 
@@ -23,7 +23,7 @@
             type="text"
             maxlength="3"
             class="px-3 py-2 border rounded-xl text-center"
-            style="width: 30px;"
+            style="width: 40px;"
             @input="autoMove(1)"
           />
           <input 
@@ -32,7 +32,7 @@
             type="text"
             maxlength="4"
             class="px-3 py-2 border rounded-xl text-center"
-            style="width: 40px;"
+            style="width: 50px;"
           />
         </div>
 
@@ -65,20 +65,21 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref } from 'vue';
 
 const form = ref({
   firstName: '',
   lastName: '',
   email: '',
+  phone: '',
   password: '',
   role: '',
   qualifiedPosition: ''
-})
+});
 
-const phoneParts = ref(['', '', '']) // Stores phone number in three parts
-const errors = ref({})
-const success = ref(false)
+const phoneParts = ref(['', '', '']); // Stores phone number in three parts
+const errors = ref({});
+const success = ref(false);
 
 // Field Definitions
 const fields = [
@@ -89,74 +90,83 @@ const fields = [
   { name: 'password', label: 'Password', type: 'password' },
   { name: 'role', label: 'Role', type: 'text' },
   { name: 'qualifiedPosition', label: 'Qualified Position', type: 'text' }
-]
+];
 
+// Validation Helper Functions
 function validateEmail(email) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
 function validatePhone(phone) {
-  return /^\d{10}$/.test(phone)
+  return /^\d{10}$/.test(phone);
 }
 
 // Automatically move to the next input field after 3 digits
 function autoMove(index) {
   if (phoneParts.value[index].length === (index === 2 ? 4 : 3)) {
-    const nextInput = document.getElementById(`phone${index + 2}`)
-    if (nextInput) nextInput.focus()
+    const nextInput = document.getElementById(`phone${index + 2}`);
+    if (nextInput) nextInput.focus();
   }
 }
 
-import axios from 'axios'
-import { useRouter } from 'vue-router'
+import axios from 'axios';
+import { useRouter } from 'vue-router';
 
-const router = useRouter()
+const router = useRouter();
 
 async function handleSubmit() {
-  errors.value = {}
+  errors.value = {};
 
   // Merge phone input values
-  const phoneNumber = phoneParts.value.join('')
-  form.value.phone = phoneNumber // Store as a single value
+  const phoneNumber = phoneParts.value.join('');
+  form.value.phone = phoneNumber; // Store as a single value
 
   // Validation Rules
-  if (!form.value.firstName) errors.value.firstName = 'First name is required.'
-  if (!form.value.lastName) errors.value.lastName = 'Last name is required.'
+  if (!form.value.firstName) errors.value.firstName = 'First name is required.';
+  if (!form.value.lastName) errors.value.lastName = 'Last name is required.';
   if (!form.value.email || !validateEmail(form.value.email)) {
-    errors.value.email = 'Valid email is required.'
+    errors.value.email = 'Valid email is required.';
   }
   if (!validatePhone(phoneNumber)) {
-    errors.value.phone = 'Phone number must be 10 digits.'
+    errors.value.phone = 'Phone number must be 10 digits.';
   }
-  if (!form.value.password) errors.value.password = 'Password is required.'
+  if (!form.value.password) errors.value.password = 'Password is required.';
   if (!form.value.role) {
-    errors.value.role = 'Role is required.'
-  } else if (form.value.role.toLowerCase() === 'admin') {
-    errors.value.role = 'You are not allowed to select "admin" as a role.'
+    errors.value.role = 'Role is required.';
   }
   if (!form.value.qualifiedPosition) {
-    errors.value.qualifiedPosition = 'Qualified Position is required.'
+    errors.value.qualifiedPosition = 'Qualified Position is required.';
   }
 
   // Stop submission if there are any errors
   if (Object.keys(errors.value).length === 0) {
     try {
-      const response = await axios.post('http://localhost:80/crewMember', form.value)
+      const response = await axios.post('http://localhost:80/crewMember', form.value, {
+        auth: {
+          username: localStorage.getItem('email'), // Retrieve admin email from localStorage
+          password: localStorage.getItem('password') // Retrieve admin password from localStorage
+        }
+      });
+
+      console.log('Response from server:', response.data);
 
       if (response.status === 201) {
-        success.value = true
+        success.value = true;
         setTimeout(() => {
-          router.push('/crew-member-login') // Redirect after successful registration
-        }, 2000)
+          router.push('/crew-member-login'); // Redirect after successful registration
+        }, 2000);
+      } else {
+        errors.value.general = response.data.message || 'Failed to create crew member.';
       }
     } catch (error) {
-      console.error('Error adding crew member:', error)
-      errors.value.general = 'Something went wrong, please try again later.'
+      console.error('Error adding crew member:', error.response?.data || error.message);
+      errors.value.general = 'Something went wrong, please try again later.';
     }
+  } else {
+    console.log('Validation errors:', errors.value);
   }
 }
 </script>
-
 
 <style scoped>
 /* Optional Styling */

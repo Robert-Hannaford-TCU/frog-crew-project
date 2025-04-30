@@ -21,14 +21,8 @@
       <router-link to="/crew-list" class="text-blue-600 hover:underline" active-class="font-bold underline">
         Crew List
       </router-link>
-      <router-link to="/submit-availability" class="text-blue-600 hover:underline">
-        Submit Availability
-      </router-link>
       <router-link to="/invite-crew-member" class="text-blue-600 hover:underline">
         Invite Crew Member
-      </router-link>
-      <router-link to="/delete-crew-member" class="text-blue-600 hover:underline">
-        Delete Crew Member
       </router-link>
       <router-link to="/create-game-schedule" class="text-blue-600 hover:underline">
         Create Game Schedule
