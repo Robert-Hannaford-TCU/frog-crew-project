@@ -18,45 +18,45 @@
 </template>
 
 <script setup>
-import { ref, onMounted, defineProps } from 'vue'
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
 
-const props = defineProps({
-  crewMemberId: {
-    type: String,
-    required: true
-  }
-})
+const profile = ref({});
+const loading = ref(true);
+const error = ref(null);
 
-const profile = ref({})
-const loading = ref(true)
-const error = ref(null)
-
+// Function to fetch the crew member profile from the backend
 async function fetchCrewMemberProfile(id) {
-  await new Promise(resolve => setTimeout(resolve, 500))
-
-  if (id === '1') {
-    return {
-      firstName: 'Jane',
-      lastName: 'Doe',
-      email: 'jane.doe@example.com',
-      phone: '123-456-7890',
-      role: 'Medic',
-      qualifiedPosition: 'Lead Medic'
+  try {
+    // Send a GET request to fetch the profile by userId
+    const response = await axios.get(`http://localhost:80/crewMember/${id}`);
+    if (response.data.success) {
+      return response.data.data; // Return the profile data
+    } else {
+      throw new Error(response.data.message || 'Failed to fetch profile');
     }
-  } else {
-    throw new Error('Profile not found')
+  } catch (err) {
+    throw new Error(err.response?.data?.message || 'Error fetching profile');
   }
 }
 
+// When the component is mounted, load the profile data
 onMounted(async () => {
   try {
-    profile.value = await fetchCrewMemberProfile(props.crewMemberId)
+    // Retrieve userId from localStorage (saved during login)
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      throw new Error('No logged-in user ID found!');
+    }
+
+    // Fetch the profile using the userId
+    profile.value = await fetchCrewMemberProfile(userId);
   } catch (err) {
-    error.value = err.message
+    error.value = err.message;
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-})
+});
 </script>
 
 <script>
@@ -67,6 +67,6 @@ export const ProfileItem = {
       <label class="block text-sm font-semibold text-gray-700">{{ label }}</label>
       <p class="text-gray-900">{{ value }}</p>
     </div>
-  `
-}
+  `,
+};
 </script>

@@ -57,7 +57,7 @@
   // Fetch games from the backend
   onMounted(async () => {
     try {
-      const response = await axios.get('http://localhost:8080/gameSchedule/notSubmitted') // Adjust endpoint as needed
+      const response = await axios.get('http://localhost:80/gameSchedule/notSubmitted') // Adjust endpoint as needed
       games.value = response.data.data
     } catch (error) {
       console.error('Error fetching games:', error)
@@ -74,7 +74,7 @@
     }))
   
     try {
-      const response = await axios.post('http://localhost:8080/availability', { availability })
+      const response = await axios.post('http://localhost:80/availability', { availability })
       if (response.status === 200) {
         successMessage.value = 'Availability submitted successfully!'
         selectedGames.value = [] // Clear selections

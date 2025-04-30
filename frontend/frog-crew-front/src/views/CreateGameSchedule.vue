@@ -107,7 +107,7 @@
         .join(', ')
   
       try {
-        const response = await axios.post('http://localhost:8080/gameSchedule', form.value)
+        const response = await axios.post('http://localhost:80/gameSchedule', form.value)
         if (response.status === 200) {
           successMessage.value = 'Game schedule saved successfully as a draft!'
           form.value.sportType = ''

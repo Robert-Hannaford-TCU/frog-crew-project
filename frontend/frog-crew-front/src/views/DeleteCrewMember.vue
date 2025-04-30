@@ -63,7 +63,7 @@ const showModal = ref(false)
 // Fetch crew members from backend when the component is mounted
 onMounted(async () => {
   try {
-    const response = await axios.get('http://localhost:8080/crewMember') // Adjust endpoint if needed
+    const response = await axios.get('http://localhost:80/crewMember') // Adjust endpoint if needed
     crewMembers.value = response.data.data
   } catch (error) {
     console.error('Error fetching crew members:', error)
@@ -85,7 +85,7 @@ function cancelDelete() {
 // Delete the selected crew member from the backend
 async function deleteCrewMember() {
   try {
-    const response = await axios.delete(`http://localhost:8080/crewMember/${selectedMember.value.id}`)
+    const response = await axios.delete(`http://localhost:80/crewMember/${selectedMember.value.id}`)
     if (response.status === 200) {
       // Remove the deleted member from the list
       crewMembers.value = crewMembers.value.filter(member => member.id !== selectedMember.value.id)

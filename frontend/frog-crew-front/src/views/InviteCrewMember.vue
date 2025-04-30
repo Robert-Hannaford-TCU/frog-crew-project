@@ -95,7 +95,7 @@
   
     if (Object.keys(errors.value).length === 0) {
       try {
-        const response = await axios.post('http://localhost:8080/invite', form.value)
+        const response = await axios.post('http://localhost:80/invite', form.value)
         if (response.status === 200) {
           successMessage.value = 'Invitation email sent successfully!'
           form.value.name = ''

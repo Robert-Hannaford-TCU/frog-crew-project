@@ -3,6 +3,7 @@
     <h1 class="text-2xl font-bold mb-4">Crew Member Login</h1>
 
     <form @submit.prevent="handleLogin">
+      <!-- Email Input -->
       <div class="mb-4">
         <label for="email" class="block font-medium mb-1">Email</label>
         <input 
@@ -15,6 +16,7 @@
         <p v-if="errors.email" class="text-red-500 text-sm mt-1">{{ errors.email }}</p>
       </div>
 
+      <!-- Password Input -->
       <div class="mb-4">
         <label for="password" class="block font-medium mb-1">Password</label>
         <input 
@@ -27,6 +29,7 @@
         <p v-if="errors.password" class="text-red-500 text-sm mt-1">{{ errors.password }}</p>
       </div>
 
+      <!-- Submit Button -->
       <div class="flex justify-between">
         <button 
           type="submit"
@@ -36,12 +39,19 @@
         </button>
       </div>
 
+      <!-- Error Message -->
       <div v-if="errors.general" class="text-red-500 text-sm mt-4">
         {{ errors.general }}
       </div>
 
+      <!-- Login Success Message -->
       <div v-if="loginSuccess" class="text-green-600 mt-4">
         Login successful. Redirecting...
+      </div>
+
+      <!-- Display Crew Member ID -->
+      <div v-if="loginSuccess && crewMemberId" class="text-blue-600 mt-4">
+        Crew Member ID: {{ crewMemberId }}
       </div>
     </form>
   </div>
@@ -52,6 +62,7 @@ import { ref } from 'vue'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
 
+// Reactive variables
 const credentials = ref({
   email: '',
   password: ''
@@ -59,12 +70,15 @@ const credentials = ref({
 
 const errors = ref({})
 const loginSuccess = ref(false)
+const crewMemberId = ref('') // Holds Crew Member ID
 const router = useRouter()
 
+// Function to validate email format
 function validateEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 }
 
+// Handle login logic
 async function handleLogin() {
   errors.value = {}
 
@@ -82,12 +96,12 @@ async function handleLogin() {
   }
 
   try {
-    // Send login request to backend
-    const response = await axios.post('http://localhost:8080/auth/login', {}, {
+    // Send login request to backend with HTTP Basic Authentication
+    const response = await axios.post('http://localhost:80/auth/login', {}, {
       auth: {
         username: credentials.value.email,
-        password: credentials.value.password
-      }
+        password: credentials.value.password,
+      },
     })
 
     if (response.status === 200 && response.data.success) {
@@ -98,9 +112,15 @@ async function handleLogin() {
       localStorage.setItem('userId', userData.userId)
       localStorage.setItem('role', userData.role)
 
-      // Redirect to dashboard after successful login
+      // Update reactive crewMemberId variable
+      crewMemberId.value = userData.userId
+
+      // Show Crew Member ID dynamically on screen
+      console.log(`Crew Member ID: ${crewMemberId.value}`)
+
+      // Redirect to dashboard or profile page
       setTimeout(() => {
-        router.push('/dashboard')
+        router.push(`/crew-member-profile/${crewMemberId.value}`)
       }, 2000)
     } else {
       errors.value.general = response.data.message || 'Login failed. Please try again.'

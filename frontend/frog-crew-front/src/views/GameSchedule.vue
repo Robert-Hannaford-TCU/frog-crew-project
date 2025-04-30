@@ -53,7 +53,7 @@
   // Fetch game schedule
   onMounted(async () => {
     try {
-      const response = await axios.get('http://localhost:8080/gameSchedule') // Adjust endpoint as needed
+      const response = await axios.get('http://localhost:80/gameSchedule') // Adjust endpoint as needed
       games.value = response.data.data
     } catch (error) {
       console.error('Error fetching game schedule:', error)

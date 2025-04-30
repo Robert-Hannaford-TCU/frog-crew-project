@@ -141,7 +141,7 @@ async function handleSubmit() {
   // Stop submission if there are any errors
   if (Object.keys(errors.value).length === 0) {
     try {
-      const response = await axios.post('http://localhost:8080/crewMember', form.value)
+      const response = await axios.post('http://localhost:80/crewMember', form.value)
 
       if (response.status === 201) {
         success.value = true

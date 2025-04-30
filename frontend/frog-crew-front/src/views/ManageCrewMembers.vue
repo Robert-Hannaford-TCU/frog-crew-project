@@ -58,7 +58,7 @@
   // Fetch crew members from backend
   onMounted(async () => {
     try {
-      const response = await axios.get('http://localhost:8080/crewMember') // Adjust endpoint as needed
+      const response = await axios.get('http://localhost:80/crewMember') // Adjust endpoint as needed
       crewMembers.value = response.data.data
     } catch (error) {
       console.error('Error fetching crew members:', error)
