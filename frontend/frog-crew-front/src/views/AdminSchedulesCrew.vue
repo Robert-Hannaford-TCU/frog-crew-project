@@ -78,7 +78,7 @@
   // Fetch Scheduled Games
   onMounted(async () => {
     try {
-      const response = await axios.get('http://localhost:8080/scheduledGames') // Adjust backend URL
+      const response = await axios.get('http://localhost:80/scheduledGames') // Adjust backend URL
       games.value = response.data
     } catch (error) {
       console.error('Error fetching games:', error)
@@ -90,7 +90,7 @@
     if (!selectedGame.value) return
   
     try {
-      const response = await axios.get(`http://localhost:8080/scheduledGames/${selectedGame.value}/positions`) // Adjust backend URL
+      const response = await axios.get(`http://localhost:80/scheduledGames/${selectedGame.value}/positions`) // Adjust backend URL
       crewPositions.value = response.data.positions
       availableCrewMembers.value = response.data.crewMembers
     } catch (error) {
@@ -104,7 +104,7 @@
   
     try {
       const response = await axios.post(
-        `http://localhost:8080/scheduledGames/${selectedGame.value}/assignments`,
+        `http://localhost:80/scheduledGames/${selectedGame.value}/assignments`,
         { assignments: assignedCrew.value }
       ) // Adjust backend URL
   
@@ -124,7 +124,7 @@
   
     try {
       const response = await axios.post(
-        `http://localhost:8080/scheduledGames/${selectedGame.value}/assignments/draft`,
+        `http://localhost:80/scheduledGames/${selectedGame.value}/assignments/draft`,
         { assignments: assignedCrew.value }
       ) // Adjust backend URL
   
