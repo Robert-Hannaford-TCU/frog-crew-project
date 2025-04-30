@@ -137,19 +137,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                     .andExpect(jsonPath("$.data.crewedMembers[1].position").value("DIRECTOR"));;
         }
 
-        // Game exists but no crew assigned ----- not sure if needed... Will ask
-//        @Test
-//        void testGetCrewListNoAssignments() throws Exception {
-//            // Given
-//            given(this.crewAssignmentService.getCrewListForGame(1)).willReturn(emptyList);
-//
-//            // When and then
-//            this.mockMvc.perform(get("/crewList/1").accept(MediaType.APPLICATION_JSON))
-//                    .andExpect(jsonPath("$.flag").value(true))
-//                    .andExpect(jsonPath("$.code").value(StatusCode.NO_CONTENT))
-//                    .andExpect(jsonPath("$.message").value("No crew assigned to this game."))
-//                    .andExpect(jsonPath("$.data").doesNotExist());
-//        }
 
         // Game not found
         @Test
